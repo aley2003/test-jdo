@@ -20,8 +20,15 @@ public class SimpleTest
         try
         {
             tx.begin();
+            Person p = new Person(1, "Number One");
+            p.addFunction(new Function(1, "F1"));
+            pm.makePersistent(p);
 
-            // [INSERT code here to persist object required for testing]
+            Query query = pm.newQuery("select from mydomain.model.Person WHERE id==pId");
+            query.declareParameters("int pId");
+            pm.getFetchPlan().addGroup("functions");
+            query.execute(1);
+            
             tx.commit();
         }
         catch (Throwable thr)
