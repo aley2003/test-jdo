@@ -10,7 +10,6 @@ import javax.jdo.Transaction;
 
 import mydomain.model.Detail;
 import mydomain.model.Master;
-import mydomain.model.SubDetail;
 
 import org.datanucleus.util.NucleusLogger;
 import org.junit.Test;
@@ -31,16 +30,11 @@ public class SimpleTest
             Master master = new Master(1, "Master");
             Detail detail = new Detail(1, "Detail");
             master.addDetail(detail);
-//            detail.addSubDetail(new SubDetail(1, "SubDetail"));
             pm.makePersistent(master);
 
             Query query = pm.newQuery("select from mydomain.model.Master ORDER BY id");
             pm.getFetchPlan().addGroup("details");
             query.execute(1);
-//            Query query = pm.newQuery("select from mydomain.model.Detail WHERE this.master.id==pId ORDER BY id");
-//            query.declareParameters("int pId");
-//            pm.getFetchPlan().addGroup("subDetails");
-//            query.execute(1);
             
             tx.commit();
         }
