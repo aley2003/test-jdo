@@ -3,22 +3,29 @@ package mydomain.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.jdo.annotations.Element;
 import javax.jdo.annotations.FetchGroup;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 @PersistenceCapable(detachable="true")
-@FetchGroup(name="functions", members={@Persistent(name="functions")})
-public class Person
+@FetchGroup(name="subDetails", members={@Persistent(name="subDetails")})
+public class Detail
 {
     @PrimaryKey
     Long id;
 
+    @Persistent
     String name;
-    List<Function> functions = new ArrayList<Function>();
+    @Persistent
+    Master master;
+    
+    @Persistent
+    @Element(types=SubDetail.class, dependent="false", mappedBy="detail")
+    List<SubDetail> subDetails = new ArrayList<SubDetail>();
 
-    public Person(long id, String name)
+    public Detail(long id, String name)
     {
         this.id = id;
         this.name = name;
@@ -33,7 +40,7 @@ public class Person
     {
         return id;
     }
-    public void addFunction(Function function) {
-    	functions.add(function);
+    public void addSubDetail(SubDetail subDetail) {
+    	subDetails.add(subDetail);
     }
 }

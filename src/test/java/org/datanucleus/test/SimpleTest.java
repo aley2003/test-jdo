@@ -1,11 +1,19 @@
 package org.datanucleus.test;
 
-import org.junit.*;
-import javax.jdo.*;
+import static org.junit.Assert.fail;
 
-import static org.junit.Assert.*;
-import mydomain.model.*;
+import javax.jdo.JDOHelper;
+import javax.jdo.PersistenceManager;
+import javax.jdo.PersistenceManagerFactory;
+import javax.jdo.Query;
+import javax.jdo.Transaction;
+
+import mydomain.model.Detail;
+import mydomain.model.Master;
+import mydomain.model.SubDetail;
+
 import org.datanucleus.util.NucleusLogger;
+import org.junit.Test;
 
 public class SimpleTest
 {
@@ -20,14 +28,19 @@ public class SimpleTest
         try
         {
             tx.begin();
-            Person p = new Person(1, "Number One");
-            p.addFunction(new Function(1, "F1"));
-            pm.makePersistent(p);
+            Master master = new Master(1, "Master");
+            Detail detail = new Detail(1, "Detail");
+            master.addDetail(detail);
+//            detail.addSubDetail(new SubDetail(1, "SubDetail"));
+            pm.makePersistent(master);
 
-            Query query = pm.newQuery("select from mydomain.model.Person WHERE id==pId");
-            query.declareParameters("int pId");
-            pm.getFetchPlan().addGroup("functions");
+            Query query = pm.newQuery("select from mydomain.model.Master ORDER BY id");
+            pm.getFetchPlan().addGroup("details");
             query.execute(1);
+//            Query query = pm.newQuery("select from mydomain.model.Detail WHERE this.master.id==pId ORDER BY id");
+//            query.declareParameters("int pId");
+//            pm.getFetchPlan().addGroup("subDetails");
+//            query.execute(1);
             
             tx.commit();
         }

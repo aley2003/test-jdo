@@ -3,14 +3,17 @@ package mydomain.model;
 import javax.jdo.annotations.*;
 
 @PersistenceCapable(detachable="true")
-public class Function
+public class SubDetail
 {
     @PrimaryKey
     Long id;
 
+    @Persistent
     String name;
+    @Persistent
+    Detail detail;
 
-    public Function(long id, String name)
+    public SubDetail(long id, String name)
     {
         this.id = id;
         this.name = name;
